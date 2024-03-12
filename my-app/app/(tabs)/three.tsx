@@ -68,5 +68,6 @@ const styles = StyleSheet.create({
     fontSize: 50, 
     fontWeight: 'bold',
     color:'#ff2c2c',
+    marginBottom: 20,
   },
 });
