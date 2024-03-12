@@ -1,48 +1,45 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView, Animated, Easing } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 
 export default function TabOneScreen() {
   const navigation = useNavigation();
-  const reelItems = ['PUBS', 'RESTAURANTS', 'GYMS', 'JAMES HOUSE', 'CORMAC\'S HOUSE', 'OFF LICENSE'];
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const scrollY = useRef(new Animated.Value(0)).current;
 
   const goToTabTwo = () => {
     navigation.navigate('two');
   };
 
-  const startScrollAnimation = () => {
-    Animated.timing(scrollY, {
-      toValue: -100 * (selectedIndex + 1),
-      duration: 500,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (finished) {
-        // Adjust index for circular motion
-        setSelectedIndex((selectedIndex + 1) % reelItems.length);
-        // Reset scroll position
-        scrollY.setValue(-100 * (selectedIndex + 1));
-      }
-    });
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>WHERE TO GO?</Text>
-      <TouchableOpacity onPress={startScrollAnimation}>
-        <Animated.View style={[styles.scrollContainer, { transform: [{ translateY: scrollY }] }]}>
-          {reelItems.map((item, index) => (
-            <Text key={index} style={styles.carouselItem}>{item}</Text>
-          ))}
-        </Animated.View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={goToTabTwo}>
-        <Text style={styles.buttonText}>Select</Text>
-      </TouchableOpacity>
+      <ScrollView
+        horizontal={false} // Set horizontal to false to make it vertical
+
+        showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
+      >
+        {/* Your carousel content goes here */}
+        <Text style={styles.title}>WHERE GO?</Text>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>PUBS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>RESTURANTS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>GYMS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>JAMES HOUSE</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>CORMACS HOUSE</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+          <Text style={styles.text}>OFF LICENSE</Text>
+        </TouchableOpacity>
+        {/* Add more items as needed */}
+      </ScrollView>
     </View>
   );
 }
@@ -54,35 +51,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fde992',
   },
-  scrollContainer: {
+  carouselItem: {
+    width: '100%', // Take full width of the screen
     alignItems: 'center',
     justifyContent: 'center',
-    height: 200, // Adjust height as needed
+    borderRadius: 200,
+    backgroundColor: '#ff2c2c', // Background color of each carousel item
+    height: 100, // Example height, adjust as needed
+    marginVertical: 10, // Adjust margin between items
   },
-  carouselItem: {
-    color: 'white',
+  text: {
+    color: 'white', // Set text color to white
     fontSize: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 40,
-    backgroundColor: '#ff2c2c',
-    borderRadius: 20,
-    marginVertical: 10,
   },
   title: {
-    fontSize: 30,
+    fontSize: 50, 
     fontWeight: 'bold',
-    color: '#ff2c2c',
+    color:'#ff2c2c',
     marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#ff2c2c',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
   },
 });
