@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   questionMark: {
     width: '80%',
     height: '80%',
-    borderRadius: 200,
+  
     backgroundColor: '#fde992',
     alignItems: 'center',
     justifyContent: 'center',
