@@ -8,7 +8,7 @@ export default function TabOneScreen() {
   const navigation = useNavigation();
 
   const goToTabTwo = () => {
-    navigation.navigate('resturants');
+    navigation.navigate('three');
   };
 
   return (
@@ -19,25 +19,11 @@ export default function TabOneScreen() {
         showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
       >
         {/* Your carousel content goes here */}
-        <Text style={styles.title}>WHERE GO?</Text>
+        <Text style={styles.title}>RESTURANTS</Text>
         <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>PUBS</Text>
+          <Text style={styles.text}>BACK</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>RESTURANTS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>GYMS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>JAMES HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>CORMACS HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>OFF LICENSE</Text>
-        </TouchableOpacity>
+        
         {/* Add more items as needed */}
       </ScrollView>
     </View>
