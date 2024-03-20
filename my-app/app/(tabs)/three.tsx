@@ -1,44 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import EditScreenInfo from '@/components/EditScreenInfo';
 
 export default function TabOneScreen() {
   const navigation = useNavigation();
 
-  const goToTabTwo = () => {
-    navigation.navigate('resturants');
+  const goToTab = (tabName) => {
+    navigation.navigate(tabName);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView
-        horizontal={false} // Set horizontal to false to make it vertical
-
-        showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
+        horizontal={false}
+        showsVerticalScrollIndicator={false}
       >
-        {/* Your carousel content goes here */}
         <Text style={styles.title}>WHERE GO?</Text>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('pubs')}>
           <Text style={styles.text}>PUBS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>RESTURANTS</Text>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('resturants')}>
+          <Text style={styles.text}>RESTAURANTS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('Gyms')}>
           <Text style={styles.text}>GYMS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('JamesHouse')}>
           <Text style={styles.text}>JAMES HOUSE</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('CormacsHouse')}>
           <Text style={styles.text}>CORMACS HOUSE</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('OffLicense')}>
           <Text style={styles.text}>OFF LICENSE</Text>
         </TouchableOpacity>
-        {/* Add more items as needed */}
       </ScrollView>
     </View>
   );
@@ -52,16 +48,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fde992',
   },
   carouselItem: {
-    width: '100%', // Take full width of the screen
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 200,
-    backgroundColor: '#ff2c2c', // Background color of each carousel item
-    height: 100, // Example height, adjust as needed
-    marginVertical: 10, // Adjust margin between items
+    backgroundColor: '#ff2c2c',
+    height: 100,
+    marginVertical: 10,
   },
   text: {
-    color: 'white', // Set text color to white
+    color: 'white',
     fontSize: 20,
   },
   title: {
