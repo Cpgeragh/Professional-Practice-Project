@@ -8,7 +8,7 @@ export default function TabOneScreen() {
   const navigation = useNavigation();
 
   const goToTabTwo = () => {
-    navigation.navigate('two');
+    navigation.navigate("two");
   };
 
   return (
