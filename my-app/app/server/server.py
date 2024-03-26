@@ -10,7 +10,7 @@ def ping():
     return jsonify({'message': 'Server is running'}), 200
 # Dummy user data (replace with your actual user authentication logic)
 users = {
-    'user1': 'password1',
+    'user1': 'AppPassword123',
     'user2': 'password2'
 }
 
