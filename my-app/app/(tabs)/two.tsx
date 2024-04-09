@@ -2,19 +2,44 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TabTwoScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameFocused, setUsernameFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const navigation = useNavigation(); // Initialize navigation hook
 
-  const handleLogin = () => {
-    // You can implement your login logic here
-    console.log('Username:', username);
-    console.log('Password:', password);
-    // For example, you can send username and password to your backend for authentication
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://192.168.1.11:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      
+      // Check if login was successful
+      if (data.success) {
+        // Navigate to the 'three' screen upon successful login
+        navigation.navigate('three'); 
+      } else {
+        // Handle unsuccessful login, e.g., display an error message
+        console.log('Login failed:', data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -38,7 +63,7 @@ export default function TabTwoScreen() {
       />
       <Button title="Login" onPress={handleLogin} color="#ff2c2c" />
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <EditScreenInfo path="app/(tabs)/three.tsx" />
     </View>
   );
 }
@@ -68,7 +93,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     color: '#ff2c2c',
-    outlineColor: '#fff', 
+   // outlineColor: '#fff', 
   },
   inputFocused: {
     color: '#fff',
