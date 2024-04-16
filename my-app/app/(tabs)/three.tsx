@@ -1,44 +1,54 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, TouchableOpacity, ScrollView, Text, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import EditScreenInfo from '@/components/EditScreenInfo';
+
+// Define the TypeScript interfaces for the pub data
+interface Pub {
+  name: string;
+  location: string;
+  rating: number;
+  image_url?: string; // Optional property for an image URL
+}
 
 export default function TabOneScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
+  const [pubs, setPubs] = useState<Pub[]>([]);
+  const [showPubs, setShowPubs] = useState(false);
 
-  const goToTabTwo = () => {
-    navigation.navigate("two");
+  // Function to fetch pubs data from the Flask server
+  const fetchPubs = async () => {
+    try {
+      const response = await fetch('http://192.168.0.32:5000/pubs');
+      const data: Pub[] = await response.json(); // Ensure that the response is typed as an array of Pubs
+      setPubs(data);
+      setShowPubs(true); // Show the pubs section
+    } catch (error) {
+      console.error('Error fetching pubs:', error);
+      setShowPubs(false); // Hide the pubs section on error
+    }
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        horizontal={false} // Set horizontal to false to make it vertical
-
-        showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
-      >
-        {/* Your carousel content goes here */}
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>WHERE GO?</Text>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
+        <TouchableOpacity style={styles.carouselItem} onPress={fetchPubs}>
           <Text style={styles.text}>PUBS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>RESTURANTS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>GYMS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>JAMES HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>CORMACS HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={goToTabTwo}>
-          <Text style={styles.text}>OFF LICENSE</Text>
-        </TouchableOpacity>
-        {/* Add more items as needed */}
+        {/* Other category buttons */}
+        {/* Conditionally render pubs data */}
+        {showPubs && pubs.map((pub, index) => (
+          <View key={index} style={styles.pubContainer}>
+            <Text style={styles.pubName}>{pub.name}</Text>
+            <Text>{pub.location}</Text>
+            <Text>Rating: {pub.rating}</Text>
+            <Image
+              source={{ uri: pub.image_url }} // Make sure `pub.image_url` is the correct field
+              style={styles.pubImage}
+              resizeMode="cover"
+            />
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -52,22 +62,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#fde992',
   },
   carouselItem: {
-    width: '100%', // Take full width of the screen
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 200,
-    backgroundColor: '#ff2c2c', // Background color of each carousel item
-    height: 100, // Example height, adjust as needed
-    marginVertical: 10, // Adjust margin between items
+    backgroundColor: '#ff2c2c',
+    height: 100,
+    marginVertical: 10,
   },
   text: {
-    color: 'white', // Set text color to white
+    color: 'white',
     fontSize: 20,
   },
   title: {
-    fontSize: 50, 
+    fontSize: 50,
     fontWeight: 'bold',
-    color:'#ff2c2c',
+    color: '#ff2c2c',
     marginBottom: 20,
+  },
+  pubContainer: {
+    backgroundColor: 'white',
+    padding: 10,
+    marginVertical: 5,
+    width: '100%',  // Ensure full width is taken
+    alignItems: 'center',  // Center items horizontally
+  },
+  pubName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  pubInfo: {
+    fontSize: 18,
+  },
+  pubImage: {
+    width: '100%',  // Full width of the container
+    height: 200,     // Fixed height for the images
+    marginVertical: 10, // Space above and below the image
   },
 });

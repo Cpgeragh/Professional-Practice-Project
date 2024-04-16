@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
+
 
 export default function TabTwoScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameFocused, setUsernameFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-  const navigation = useNavigation(); // Initialize navigation hook
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://192.168.0.32:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,13 +24,14 @@ export default function TabTwoScreen() {
           password,
         }),
       });
+
       const data = await response.json();
       console.log(data);
-      
+
       // Check if login was successful
       if (data.success) {
         // Navigate to the 'three' screen upon successful login
-        navigation.navigate('three'); 
+        navigation.navigate('three');
       } else {
         // Handle unsuccessful login, e.g., display an error message
         console.log('Login failed:', data.message);
@@ -38,8 +40,8 @@ export default function TabTwoScreen() {
       console.error('Error:', error);
     }
   };
-  
-  
+
+
 
   return (
     <View style={styles.container}>
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     color: '#ff2c2c',
-   // outlineColor: '#fff', 
+    // outlineColor: '#fff', 
   },
   inputFocused: {
     color: '#fff',
