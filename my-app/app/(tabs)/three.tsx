@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView, PermissionsAndroid } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 //import Geolocation from '@react-native-community/geolocation';
 
 export default function TabThreeScreen() {
   const navigation = useNavigation();
+  const [fontsLoaded] = useFonts({
+    Bonfire: require('../../assets/fonts/Bonfire.ttf'),
+  });
  // const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
   //const [error, setError] = useState('');*/
 
@@ -53,9 +57,9 @@ export default function TabThreeScreen() {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={[styles.title, { fontFamily: 'GLAMOURGIRL' }]}>WHERE TO GO?</Text>
+        <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHERE TO GO?</Text>
         <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('pubs')}>
-          <Text style={[styles.text, { fontFamily: 'GLAMOURGIRL' }]}>PUBS</Text>
+          <Text style={[styles.text, { fontFamily: 'Bonfire' }]}>PUBS</Text>
         </TouchableOpacity>
         {/* ... Add other TouchableOpacity elements here ... */}
       </ScrollView>
@@ -85,13 +89,14 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 20,
+    fontFamily:'bonfire',
   },
   title: {
     fontSize: 50, 
     fontWeight: 'bold',
     color:'#ff2c2c',
     marginBottom: 20,
-    fontFamily:'GLAMOURGIRL',
+    fontFamily:'bonfire',
   },
   locationContainer: {
     padding: 20,

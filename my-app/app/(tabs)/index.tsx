@@ -8,7 +8,7 @@ import { useFonts } from 'expo-font';
 export default function TabOneScreen() {
   const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
-    GLAMOURGIRL: require('../../assets/fonts/GLAMOURGIRL.ttf'), // Ensure this path matches the location of your font file
+    Bonfire: require('../../assets/fonts/Bonfire.ttf'), // Ensure this path matches the location of your font file
   });
 
   const goToTabTwo = () => {
@@ -27,7 +27,7 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={goToTabTwo} style={styles.questionMark}>
-        <Text style={[styles.title, { fontFamily: 'GLAMOURGIRL' }]}>WHAT DO?</Text>
+        <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHAT DO?</Text>
         <Text style={styles.questionMarkText} adjustsFontSizeToFit={true} numberOfLines={1}>?</Text>
       </TouchableOpacity>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     color: '#ff2c2c',
-    fontFamily: 'GLAMOURGIRL',
+    fontFamily: 'Bonfire',
   },
   separator: {
     marginVertical: 30,
@@ -64,6 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 200,
     fontWeight: 'bold',
     color: '#ff2c2c',
-    fontFamily: 'GLAMOURGIRL',
+    fontFamily: 'Bonfire',
   },
 });
