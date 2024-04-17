@@ -74,7 +74,15 @@ export default function TabLayout() {
           title: 'Tab five',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
+        
       />
+       <Tabs.Screen
+        name="booking"
+        options={{
+          title: 'Tab five',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+        />
     </Tabs>
   );
 }
