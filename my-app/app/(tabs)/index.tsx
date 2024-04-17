@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import EditScreenInfo from '@/components/EditScreenInfo';
@@ -10,10 +10,29 @@ export default function TabOneScreen() {
   const [fontsLoaded] = useFonts({
     Bonfire: require('../../assets/fonts/Bonfire.ttf'), // Ensure this path matches the location of your font file
   });
+  const [showText, setShowText] = useState(true); // State to control the visibility of the "WHAT DO?" text
+
+  // Create an animated value for the question mark text scale
+  const scaleAnimText = useRef(new Animated.Value(1)).current; // Initial scale is 1
 
   const goToTabTwo = () => {
     navigation.navigate('two');
   };
+
+  useEffect(() => {
+    // Wait 3 seconds before starting the animation
+    const timer = setTimeout(() => {
+      Animated.timing(scaleAnimText, {
+        toValue: 2, // Final scale value
+        duration: 2000, // Animation takes 2 seconds
+        useNativeDriver: true, // Use native driver for better performance
+      }).start(() => goToTabTwo()); // Navigate after the animation completes
+
+      setShowText(false); // Hide the "WHAT DO?" text when the animation starts
+    }, 3000); // Delay the animation start by 3 seconds
+
+    return () => clearTimeout(timer); // Clean up the timer
+  }, []);
 
   // Show loading spinner while fonts are loading
   if (!fontsLoaded) {
@@ -27,8 +46,12 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={goToTabTwo} style={styles.questionMark}>
-        <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHAT DO?</Text>
-        <Text style={styles.questionMarkText} adjustsFontSizeToFit={true} numberOfLines={1}>?</Text>
+        {showText && (
+          <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHAT DO?</Text>
+        )}
+        <Animated.Text style={[styles.questionMarkText, { transform: [{ scale: scaleAnimText }] }]} adjustsFontSizeToFit={true} numberOfLines={1}>
+          ?
+        </Animated.Text>
       </TouchableOpacity>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/index.tsx" />
