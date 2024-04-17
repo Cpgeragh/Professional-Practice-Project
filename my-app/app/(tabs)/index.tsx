@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import EditScreenInfo from '@/components/EditScreenInfo';
+import { useFonts } from 'expo-font';
 
 export default function TabOneScreen() {
   const navigation = useNavigation();
+  const [fontsLoaded] = useFonts({
+    GLAMOURGIRL: require('../../assets/fonts/GLAMOURGIRL.ttf'), // Ensure this path matches the location of your font file
+  });
 
   const goToTabTwo = () => {
     navigation.navigate('two');
   };
 
+  // Show loading spinner while fonts are loading
+  if (!fontsLoaded) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      
       <TouchableOpacity onPress={goToTabTwo} style={styles.questionMark}>
-        <Text style={styles.title}>WHAT DO?</Text>
-        <Text style={styles.questionMarkText}>?</Text>
+        <Text style={[styles.title, { fontFamily: 'GLAMOURGIRL' }]}>WHAT DO?</Text>
+        <Text style={styles.questionMarkText} adjustsFontSizeToFit={true} numberOfLines={1}>?</Text>
       </TouchableOpacity>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/index.tsx" />
@@ -31,9 +43,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 50, 
+    fontSize: 50,
     fontWeight: 'bold',
-    color:'#ff2c2c',
+    color: '#ff2c2c',
+    fontFamily: 'GLAMOURGIRL',
   },
   separator: {
     marginVertical: 30,
@@ -43,7 +56,6 @@ const styles = StyleSheet.create({
   questionMark: {
     width: '80%',
     height: '80%',
-  
     backgroundColor: '#fde992',
     alignItems: 'center',
     justifyContent: 'center',
@@ -52,5 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 200,
     fontWeight: 'bold',
     color: '#ff2c2c',
+    fontFamily: 'GLAMOURGIRL',
   },
 });

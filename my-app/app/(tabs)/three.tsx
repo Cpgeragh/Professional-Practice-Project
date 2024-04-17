@@ -1,14 +1,51 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, ScrollView, PermissionsAndroid } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useNavigation } from '@react-navigation/native';
+//import Geolocation from '@react-native-community/geolocation';
 
-export default function TabOneScreen() {
+export default function TabThreeScreen() {
   const navigation = useNavigation();
+ // const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+  //const [error, setError] = useState('');*/
 
   const goToTab = (tabName) => {
     navigation.navigate(tabName);
   };
+
+  /*useEffect(() => {
+    const requestPermissionAndFetchLocation = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Access Required',
+            message: 'This app needs to access your location',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            (position) => {
+              setLocation({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            },
+            (error) => {
+              setError(error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+          );
+        } else {
+          setError('Location permission denied');
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    requestPermissionAndFetchLocation();
+  }, []);*/
 
   return (
     <View style={styles.container}>
@@ -16,29 +53,18 @@ export default function TabOneScreen() {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>WHERE GO?</Text>
+        <Text style={[styles.title, { fontFamily: 'GLAMOURGIRL' }]}>WHERE TO GO?</Text>
         <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('pubs')}>
-          <Text style={styles.text}>PUBS</Text>
+          <Text style={[styles.text, { fontFamily: 'GLAMOURGIRL' }]}>PUBS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('resturants')}>
-          <Text style={styles.text}>RESTAURANTS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('Gyms')}>
-          <Text style={styles.text}>GYMS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('JamesHouse')}>
-          <Text style={styles.text}>JAMES HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('CormacsHouse')}>
-          <Text style={styles.text}>CORMACS HOUSE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.carouselItem} onPress={() => goToTab('OffLicense')}>
-          <Text style={styles.text}>OFF LICENSE</Text>
-        </TouchableOpacity>
+        {/* ... Add other TouchableOpacity elements here ... */}
       </ScrollView>
+      
+      
     </View>
+    
   );
-}
+        }
 
 const styles = StyleSheet.create({
   container: {
@@ -65,5 +91,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color:'#ff2c2c',
     marginBottom: 20,
+    fontFamily:'GLAMOURGIRL',
+  },
+  locationContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 16,
+    color: 'green',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
   },
 });
