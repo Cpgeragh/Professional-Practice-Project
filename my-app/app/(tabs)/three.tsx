@@ -222,4 +222,3 @@ const styles = StyleSheet.create({
     marginVertical: 10, // Space above and below the image
   },
 });
-
