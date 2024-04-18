@@ -29,7 +29,7 @@ export default function TabOneScreen() {
       }).start(() => goToTabTwo()); // Navigate after the animation completes
 
       setShowText(false); // Hide the "WHAT DO?" text when the animation starts
-    }, 3000); // Delay the animation start by 3 seconds
+    }, 2000); // Delay the animation start by 3 seconds
 
     return () => clearTimeout(timer); // Clean up the timer
   }, []);
