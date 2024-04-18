@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, Button } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 
 export default function TabTwoScreen() {
   const [username, setUsername] = useState('');
@@ -10,6 +11,9 @@ export default function TabTwoScreen() {
   const [usernameFocused, setUsernameFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const [fontsLoaded] = useFonts({
+    Bonfire: require('./Power Entry.otf'), // Ensure this path matches the location of your font file
+  });
 
   const handleLogin = async () => {
     try {
@@ -43,7 +47,7 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>WHO YOU?</Text>
+      <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHO YOU?</Text>
       <TextInput
         style={[styles.input, usernameFocused && styles.inputFocused]}
         placeholder="Username"
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     color: '#ff2c2c',
+    fontFamily: 'Bonfire',
   },
   separator: {
     marginVertical: 30,
