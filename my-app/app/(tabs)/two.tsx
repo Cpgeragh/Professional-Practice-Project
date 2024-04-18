@@ -4,7 +4,6 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 
-
 export default function TabTwoScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +13,7 @@ export default function TabTwoScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.0.131:5000/login', {
+      const response = await fetch('http://192.168.0.32:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,12 +27,9 @@ export default function TabTwoScreen() {
       const data = await response.json();
       console.log(data);
 
-      // Check if login was successful
       if (data.success) {
-        // Navigate to the 'three' screen upon successful login
-        navigation.navigate('three');
+        navigation.navigate('three'); // Assuming 'three' is your home screen after login
       } else {
-        // Handle unsuccessful login, e.g., display an error message
         console.log('Login failed:', data.message);
       }
     } catch (error) {
@@ -41,7 +37,9 @@ export default function TabTwoScreen() {
     }
   };
 
-
+  const navigateToSignup = () => {
+    navigation.navigate('SignUpScreen'); 
+  };
 
   return (
     <View style={styles.container}>
@@ -63,9 +61,15 @@ export default function TabTwoScreen() {
         onFocus={() => setPasswordFocused(true)}
         onBlur={() => setPasswordFocused(false)}
       />
-      <Button title="Login" onPress={handleLogin} color="#ff2c2c" />
+      <View style={{ marginTop: 10, width: '50%' }}>
+        <Button title="Login" onPress={handleLogin} color="#ff2c2c" />
+      </View>
+      <View style={{ marginTop: 10, width: '50%' }}>
+        <Button title="Sign Up" onPress={navigateToSignup} color="#ff2c2c" />
+      </View>
+
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/three.tsx" />
+      
     </View>
   );
 }
@@ -95,7 +99,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     color: '#ff2c2c',
-    // outlineColor: '#fff', 
   },
   inputFocused: {
     color: '#fff',
