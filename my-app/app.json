@@ -26,8 +26,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yourcompany.myapp", // Replace with your actual Android package name
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"] // Add these lines
+      "package": "com.WhatDo.myapp",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
     "web": {
       "bundler": "metro",

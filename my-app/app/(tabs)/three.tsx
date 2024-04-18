@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView, Text, View, Image, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, ScrollView, Text, View, Image } from 'react-native';
 import * as Location from 'expo-location';
+import Carousel from 'react-native-snap-carousel';
 
 // Define TypeScript interfaces for each data type
 interface Pub {
@@ -50,22 +51,22 @@ export default function TabOneScreen() {
       try {
         let { status } = await Location.requestForegroundPermissionsAsync();
         console.log('Location permission status:', status); // Debugging permission status
-  
+
         if (status !== 'granted') {
           console.error('Permission to access location was denied');
           setCity('Location Permission Denied');
           return;
         }
-  
+
         let currentLocation = await Location.getCurrentPositionAsync({});
         console.log('Current location:', currentLocation); // Debugging location coordinates
-  
+
         let geocode = await Location.reverseGeocodeAsync({
           latitude: currentLocation.coords.latitude,
           longitude: currentLocation.coords.longitude,
         });
         console.log('Reverse geocode result:', geocode); // Debugging geocode result
-  
+
         setCity(geocode[0].city || geocode[0].region || 'Unknown location');
       } catch (error) {
         console.error('Error fetching location:', error);
@@ -74,11 +75,11 @@ export default function TabOneScreen() {
   }, []);
 
   /**
-  * Fetches data from the given endpoint and updates state accordingly.
-  * @param endpoint The server endpoint (string) from which to fetch data.
-  * @param setState The state setter function for setting the fetched data.
-  * @param setShow The state setter function for showing/hiding the data view.
-  */
+   * Fetches data from the given endpoint and updates state accordingly.
+   * @param endpoint The server endpoint (string) from which to fetch data.
+   * @param setState The state setter function for setting the fetched data.
+   * @param setShow The state setter function for showing/hiding the data view.
+   */
   const fetchData = async (
     endpoint: string,
     setState: React.Dispatch<React.SetStateAction<any[]>>,
@@ -132,22 +133,116 @@ export default function TabOneScreen() {
     setActivities([]);
   };
 
+  // Function to handle the carousel item press
+  const handleCarouselItemPress = (index: number) => {
+    // Logic to handle carousel item press
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Geolocation Display */}
-        <Text style={styles.locationText}>Welcome to {city}</Text>
-
         <Text style={styles.title}>WHERE GO?</Text>
+        <Text style={styles.geo}> Welcome to {city}</Text>
         <TouchableOpacity
-          style={styles.carouselItem}
+          style={[styles.carouselItem, showPubs && styles.selectedItem]}
           onPress={() => fetchData('pubs', setPubs, setShowPubs, [hideMovies, hideRestaurants, hideActivities])}
         >
           <Text style={styles.text}>PUBS</Text>
         </TouchableOpacity>
-        {/* ... repeat for movies, restaurants, activities ... */}
-        {/* Map through pubs, movies, restaurants, activities to display them */}
+
+        {showPubs && (
+          <Carousel
+            data={pubs}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+                <Image source={{ uri: item.image_url || '' }} style={styles.pubImage} />
+                <Text style={styles.pubName}>{item.name}</Text>
+                <Text>{item.location}</Text>
+                <Text>Rating: {item.rating}</Text>
+              </TouchableOpacity>
+            )}
+            sliderWidth={300}
+            itemWidth={200}
+            layout="default"
+            loop={true}
+          />
+        )}
+
+        <TouchableOpacity
+          style={[styles.carouselItem, showRestaurants && styles.selectedItem]}
+          onPress={() => fetchData('restaurants', setRestaurants, setShowRestaurants, [hidePubs, hideMovies, hideActivities])}
+        >
+          <Text style={styles.text}>RESTAURANTS</Text>
+        </TouchableOpacity>
+
+        {showRestaurants && (
+          <Carousel
+            data={restaurants}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+                <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
+                <Text style={styles.pubName}>{item.name}</Text>
+                <Text>{item.cuisine} - {item.address}</Text>
+                <Text>Rating: {item.rating}</Text>
+              </TouchableOpacity>
+            )}
+            sliderWidth={300}
+            itemWidth={200}
+            layout="default"
+            loop={true}
+          />
+        )}
+
+        <TouchableOpacity
+          style={[styles.carouselItem, showMovies && styles.selectedItem]}
+          onPress={() => fetchData('movies', setMovies, setShowMovies, [hidePubs, hideRestaurants, hideActivities])}
+        >
+          <Text style={styles.text}>MOVIES</Text>
+        </TouchableOpacity>
+
+        {showMovies && (
+          <Carousel
+            data={movies}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+                <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
+                <Text style={styles.pubName}>{item.movie}</Text>
+                <Text>{item.genre} - {item.time}</Text>
+                <Text>{item.cinema}</Text>
+              </TouchableOpacity>
+            )}
+            sliderWidth={300}
+            itemWidth={200}
+            layout="default"
+            loop={true}
+          />
+        )}
+
+        <TouchableOpacity
+          style={[styles.carouselItem, showActivities && styles.selectedItem]}
+          onPress={() => fetchData('activities', setActivities, setShowActivities, [hidePubs, hideMovies, hideRestaurants])}
+        >
+          <Text style={styles.text}>ACTIVITIES</Text>
+        </TouchableOpacity>
+
+        {showActivities && (
+          <Carousel
+            data={activities}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+                <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
+                <Text style={styles.pubName}>{item.activity}</Text>
+                <Text>{item.type} - {item.location}</Text>
+                <Text>{item.description}</Text>
+              </TouchableOpacity>
+            )}
+            sliderWidth={300}
+            itemWidth={200}
+            layout="default"
+            loop={true}
+          />
+        )}
+
       </ScrollView>
     </View>
   );
@@ -159,12 +254,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fde992',
-  },
-  locationText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 20,
   },
   title: {
     fontSize: 50,
@@ -181,25 +270,27 @@ const styles = StyleSheet.create({
     height: 100,
     marginVertical: 10,
   },
+  selectedItem: {
+    transform: [{ scale: 1.2 }], // Enlarge the selected item
+  },
   text: {
     color: 'white',
     fontSize: 20,
-  },
-  pubContainer: {
-    backgroundColor: 'white',
-    padding: 10,
-    marginVertical: 5,
-    width: '100%',
-    alignItems: 'center',
-  },
-  pubName: {
-    fontSize: 24,
-    fontWeight: 'bold',
   },
   pubImage: {
     width: '100%',
     height: 200,
     marginVertical: 10,
   },
-  // ... any other styles you had defined ...
+  pubName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  geo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#ff2c2c',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
 });

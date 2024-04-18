@@ -19,6 +19,7 @@
     "expo": "~50.0.13",
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
+    "expo-location": "~16.5.5",
     "expo-router": "~3.4.8",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
@@ -29,8 +30,8 @@
     "react-native": "^0.73.5",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-native-web": "~0.19.6",
-    "expo-location": "~16.5.5"
+    "react-native-snap-carousel": "^3.9.1",
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

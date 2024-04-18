@@ -34,9 +34,15 @@ users = {
 
 @app.route('/pubs', methods=['GET'])
 def get_pubs():
-    pubs_collection = pubs_db.GalwayPubs  # Use your actual collection name
-    pubs_list = list(pubs_collection.find({}, {'_id': 0}).limit(10))  # Convert the cursor to a list, exclude '_id', limit to 10 results
-    return jsonify(pubs_list), 200
+    try:
+        pubs_collection = pubs_db.GalwayPubs  # Use your actual collection name
+        pubs_list = list(pubs_collection.find({}, {'_id': 0}).limit(10))  # Convert the cursor to a list
+        return jsonify(pubs_list), 200
+    except Exception as e:
+        # Log the exception
+        print(f"An error occurred: {e}")
+        # Respond with a server error message
+        return jsonify({'message': 'Internal server error'}), 500
 
 @app.route('/movies', methods=['GET'])
 def get_movies():
