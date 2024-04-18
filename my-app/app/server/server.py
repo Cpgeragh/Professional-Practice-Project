@@ -25,6 +25,8 @@ pubs_collection = pubs_db['GalwayPubs']
 movies_collection = movies_db['GalwayMovies']
 restaurants_collection = restaurants_db['GalwayRestaurants']
 activities_collection = activities_db['GalwayActivities']
+bookings_collection = client['BookingDatabase']['Bookings']
+
 
 
 @app.route('/signup', methods=['POST'])
@@ -87,6 +89,23 @@ def get_activities():
     activities_collection = activities_db.GalwayActivities  # Use your actual collection name
     activities_list = list(activities_collection.find({}, {'_id': 0}).limit(10))  # Convert the cursor to a list, exclude '_id', limit to 10 results
     return jsonify(activities_list), 200
+
+@app.route('/bookings', methods=['POST'])
+def create_booking():
+    data = request.json
+    try:
+        bookings_collection.insert_one(data)
+        return jsonify({'success': True, 'message': 'Booking created successfully'}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/bookings', methods=['GET'])
+def get_bookings():
+    try:
+        bookings_list = list(bookings_collection.find({}, {'_id': 0}))
+        return jsonify(bookings_list), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/ping')
 def ping():

@@ -28,7 +28,7 @@ export default function TabTwoScreen() {
       console.log(data);
 
       if (data.success) {
-        navigation.navigate('three'); // Assuming 'three' is your home screen after login
+        navigation.navigate('three'); 
       } else {
         console.log('Login failed:', data.message);
       }

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-native-community/datetimepicker": "^7.6.4",
     "react-native-snap-carousel": "^3.9.1"
   },
   "devDependencies": {
