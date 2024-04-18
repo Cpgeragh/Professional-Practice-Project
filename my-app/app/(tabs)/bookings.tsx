@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, ScrollView, Text, View,Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 // You would need to import your interfaces for Pub, Movie, Restaurant, and Activity
@@ -49,18 +49,43 @@ export default function BookingsScreen() {
 
   // Renders items selected for booking
   const renderSelectedItems = () => {
-    // You would render the selected items here, using the data passed in route.params
-    // For the sake of this example, let's just return placeholders
     return (
       <View>
-        {selectedPubs?.map((pub: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }, index: React.Key | null | undefined) => (
-          <Text key={index}>{pub.name}</Text>
+        {/* Render selected pubs */}
+        {selectedPubs?.map((pub: { name: string, image_url?: string }, index: React.Key | null | undefined) => (
+          <View key={index}>
+            <Text>{pub.name}</Text>
+            {pub.image_url && <Image source={{ uri: pub.image_url }} style={{ width: 100, height: 100 }} />}
+          </View>
         ))}
-        {/* Repeat for movies, restaurants, activities */}
+  
+        {/* Render selected movies */}
+        {selectedMovies?.map((movie: { movie: string, image?: string }, index: React.Key | null | undefined) => (
+          <View key={index}>
+            <Text>{movie.movie}</Text>
+            {movie.image && <Image source={{ uri: movie.image }} style={{ width: 100, height: 100 }} />}
+          </View>
+        ))}
+  
+        {/* Render selected restaurants */}
+        {selectedRestaurants?.map((restaurant: { name: string, image?: string }, index: React.Key | null | undefined) => (
+          <View key={index}>
+            <Text>{restaurant.name}</Text>
+            {restaurant.image && <Image source={{ uri: restaurant.image }} style={{ width: 100, height: 100 }} />}
+          </View>
+        ))}
+  
+        {/* Render selected activities */}
+        {selectedActivities?.map((activity: { activity: string, image?: string }, index: React.Key | null | undefined) => (
+          <View key={index}>
+            <Text>{activity.activity}</Text>
+            {activity.image && <Image source={{ uri: activity.image }} style={{ width: 100, height: 100 }} />}
+          </View>
+        ))}
       </View>
     );
   };
-
+  
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
