@@ -89,6 +89,7 @@ export default function TabOneScreen() {
    * @param endpoint The server endpoint (string) from which to fetch data.
    * @param setState The state setter function for setting the fetched data.
    * @param setShow The state setter function for showing/hiding the data view.
+   * @param hideOthers Array of functions to hide other categories.
    */
   const fetchData = async (
     endpoint: string,
@@ -101,7 +102,7 @@ export default function TabOneScreen() {
       hideOthers.forEach(hide => hide());
 
       // Construct the full URL for the API call
-      const url = `http://192.168.0.32:5000/${endpoint}`;
+      const url = `http://192.168.1.11:5000/${endpoint}`;
 
       // Fetch data from the server
       const response = await fetch(url);
@@ -132,20 +133,16 @@ export default function TabOneScreen() {
   const selectItem = (item: any, category: string) => {
     switch (category) {
       case 'pubs':
-        // Deselect previously selected pub if exists
-        setSelectedPubs(prev => prev.length > 0 ? [item] : [...prev, item]);
+        setSelectedPubs([item]);
         break;
       case 'restaurants':
-        // Deselect previously selected restaurant if exists
-        setSelectedRestaurants(prev => prev.length > 0 ? [item] : [...prev, item]);
+        setSelectedRestaurants([item]);
         break;
       case 'movies':
-        // Deselect previously selected movie if exists
-        setSelectedMovies(prev => prev.length > 0 ? [item] : [...prev, item]);
+        setSelectedMovies([item]);
         break;
       case 'activities':
-        // Deselect previously selected activity if exists
-        setSelectedActivities(prev => prev.length > 0 ? [item] : [...prev, item]);
+        setSelectedActivities([item]);
         break;
       default:
         break;
@@ -305,9 +302,15 @@ export default function TabOneScreen() {
         {/* Add a button to navigate to the Booking Screen with all selected items */}
         <TouchableOpacity
           style={styles.carouselItem}
-          onPress={() => navigation.navigate('bookings', {
-            selectedPubs, selectedMovies, selectedRestaurants, selectedActivities
-          })}
+          onPress={() => {
+            console.log("Selected Pubs:", selectedPubs);
+            console.log("Selected Restaurants:", selectedRestaurants);
+            console.log("Selected Movies:", selectedMovies);
+            console.log("Selected Activities:", selectedActivities);
+            navigation.navigate('bookings', {
+              selectedPubs, selectedMovies, selectedRestaurants, selectedActivities
+            });
+          }}
         >
           <Text style={styles.text}>Review Booking</Text>
         </TouchableOpacity>
@@ -342,6 +345,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ff2c2c',
     marginBottom: 20,
+    textAlign: 'center',
+    marginTop: 50,
   },
   pubContainer: {
     backgroundColor: 'white',

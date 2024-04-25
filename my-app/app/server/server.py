@@ -3,6 +3,8 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from pymongo import MongoClient
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,7 +14,15 @@ CORS(app)
 
 # Connect to MongoDB
 mongo_uri = os.environ.get('MONGO_URI')
+print("MongoDB URI:", mongo_uri)  # Print out the URI
 client = MongoClient(mongo_uri)
+
+try:
+    # Connect to MongoDB using the URI
+    client = MongoClient(mongo_uri)
+    print("Connected to MongoDB successfully!")
+except Exception as e:
+    print("Error connecting to MongoDB:", e)
 
 # Access the specific databases
 pubs_db = client['Pubs']

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';  // Import useNavigation hook
+import { useNavigation } from '@react-navigation/native';
 
 const SignupScreen = () => {
   const [username, setUsername] = useState('');
@@ -8,10 +8,11 @@ const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  const navigation = useNavigation();  // Use the navigation hook to get access to navigation prop
+  // Allows Navigation Between Pages
+  const navigation = useNavigation();
 
   const handleSignup = async () => {
-    const signupUrl = 'http://192.168.0.32:5000/signup';
+    const signupUrl = 'http://192.168.1.11:5000/signup';
     try {
       const response = await fetch(signupUrl, {
         method: 'POST',
@@ -24,9 +25,7 @@ const SignupScreen = () => {
       const jsonResponse = await response.json();
       if (response.ok) {
         setMessage('Signup successful! You can now login.');
-        setUsername('');
-        setPassword('');
-        setEmail('');
+        navigation.navigate('two'); // Navigate to Login screen after successful signup
       } else {
         setMessage(jsonResponse.message || 'An error occurred during signup.');
       }
@@ -36,9 +35,9 @@ const SignupScreen = () => {
     }
   };
 
-  // Function to go back to the previous screen
+  // Function to go back to the Login screen
   const handleGoBack = () => {
-    navigation.goBack();  // Uses React Navigation's goBack method
+    navigation.navigate('two');  // Navigate directly back to the Login screen
   };
 
   return (

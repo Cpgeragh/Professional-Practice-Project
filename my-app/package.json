@@ -15,7 +15,10 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-native-community/geolocation": "^3.2.1",
+    "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/native": "^6.0.2",
+    "@types/mongodb": "^4.0.7",
+    "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~50.0.13",
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
@@ -25,6 +28,7 @@
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
     "expo-web-browser": "~12.8.2",
+    "mongodb": "^6.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "^0.73.5",

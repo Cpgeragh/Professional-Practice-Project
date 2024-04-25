@@ -1,23 +1,33 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, Button } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TextInput, Button, ActivityIndicator, View, Text } from 'react-native';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
 
 export default function TabTwoScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameFocused, setUsernameFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const [fontsLoaded] = useFonts({
-    Bonfire: require('./Power Entry.otf'), // Ensure this path matches the location of your font file
-  });
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Bauhaus Regular': require('../../assets/fonts/Bonfire.ttf'),
+      }).then(() => {
+        setFontsLoaded(true);
+      }).catch(e => {
+        console.error("Error loading fonts", e);
+      });
+    }
+
+    loadFonts();
+  }, []);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.0.32:5000/login', {
+      const response = await fetch('http://192.168.1.11:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,12 +52,16 @@ export default function TabTwoScreen() {
   };
 
   const navigateToSignup = () => {
-    navigation.navigate('SignUpScreen'); 
+    navigation.navigate('SignUpScreen');
   };
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" />;
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { fontFamily: 'Bonfire' }]}>WHO YOU?</Text>
+      <Text style={[styles.title, { fontFamily: 'Bauhaus Regular' }]}>WHO YOU?</Text>
       <TextInput
         style={[styles.input, usernameFocused && styles.inputFocused]}
         placeholder="Username"
@@ -65,15 +79,12 @@ export default function TabTwoScreen() {
         onFocus={() => setPasswordFocused(true)}
         onBlur={() => setPasswordFocused(false)}
       />
-      <View style={{ marginTop: 10, width: '50%' }}>
+      <View style={{ marginTop: 10, width: '90%' }}>
         <Button title="Login" onPress={handleLogin} color="#ff2c2c" />
       </View>
-      <View style={{ marginTop: 10, width: '50%' }}>
+      <View style={{ marginTop: 10, width: '90%' }}>
         <Button title="Sign Up" onPress={navigateToSignup} color="#ff2c2c" />
       </View>
-
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      
     </View>
   );
 }
@@ -89,7 +100,8 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     color: '#ff2c2c',
-    fontFamily: 'Bonfire',
+    fontFamily: 'Bauhaus Regular',
+    marginVertical: 20,
   },
   separator: {
     marginVertical: 30,
@@ -97,13 +109,12 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   input: {
-    height: 40,
-    width: '50%',
-    borderColor: '#ff2c2c',
+    width: '90%',
+    margin: 10,
+    padding: 10,
     borderWidth: 1,
-    marginVertical: 10,
-    paddingHorizontal: 10,
-    color: '#ff2c2c',
+    borderColor: '#ff2c2c', // Red border color
+    color: '#ff2c2c', // Text color
   },
   inputFocused: {
     color: '#fff',
