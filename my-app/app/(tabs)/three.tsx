@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel';
 
-// Define TypeScript interfaces for each data type
+// Define TypeScript Interfaces for Each Activity Type
 interface Pub {
   name: string;
   location: string;
@@ -36,12 +36,16 @@ interface Activity {
   image?: string;
 }
 
-export default function TabOneScreen() {
+// Activity Select Screen
+export default function TabThreeScreen() {
+
+  // Declares Navigation and Scrollview Paramters
   const navigation = useNavigation<any>();
-  const scrollViewRef = useRef<ScrollView>(null); // Ref for ScrollView
+  const scrollViewRef = useRef<ScrollView>(null);
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
 
+  // Declares Variables with Empty Arrays
   const [pubs, setPubs] = useState<Pub[]>([]);
   const [selectedPubs, setSelectedPubs] = useState<Pub[]>([]);
   const [showPubs, setShowPubs] = useState(false);
@@ -56,82 +60,100 @@ export default function TabOneScreen() {
   const [showActivities, setShowActivities] = useState(false);
   const [city, setCity] = useState<string>('');
 
+  // Obtains Geo-Location Data
   useEffect(() => {
+
     (async () => {
+
       try {
+
         let { status } = await Location.requestForegroundPermissionsAsync();
-        console.log('Location permission status:', status); // Debugging permission status
+        console.log('Location permission status:', status);
 
         if (status !== 'granted') {
+
           console.error('Permission to access location was denied');
           setCity('Location Permission Denied');
           return;
+
         }
 
         let currentLocation = await Location.getCurrentPositionAsync({});
-        console.log('Current location:', currentLocation); // Debugging location coordinates
+        console.log('Current location:', currentLocation);
 
         let geocode = await Location.reverseGeocodeAsync({
+
           latitude: currentLocation.coords.latitude,
           longitude: currentLocation.coords.longitude,
+
         });
-        console.log('Reverse geocode result:', geocode); // Debugging geocode result
+
+        console.log('Reverse geocode result:', geocode);
 
         setCity(geocode[0].city || geocode[0].region || 'Unknown location');
+
       } catch (error) {
+
         console.error('Error fetching location:', error);
+
       }
+
     })();
+
   }, []);
 
-  /**
-   * Fetches data from the given endpoint and updates state accordingly.
-   * @param endpoint The server endpoint (string) from which to fetch data.
-   * @param setState The state setter function for setting the fetched data.
-   * @param setShow The state setter function for showing/hiding the data view.
-   * @param hideOthers Array of functions to hide other categories.
-   */
+  // Retrieves Activity Information from Datbase
   const fetchData = async (
+
     endpoint: string,
     setState: React.Dispatch<React.SetStateAction<any[]>>,
     setShow: React.Dispatch<React.SetStateAction<boolean>>,
     hideOthers: (() => void)[]
+
   ) => {
+
     try {
-      // Hide other categories
+
+      // Hide Other Activity Options While One Activity Open
       hideOthers.forEach(hide => hide());
 
-      // Construct the full URL for the API call
-      const url = `http://192.168.1.11:5000/${endpoint}`;
+      const url = `http://10.12.8.87:5000/${endpoint}`;
 
-      // Fetch data from the server
+      // Fetch Data From Server
       const response = await fetch(url);
 
-      // Parse the JSON response
       const data = await response.json();
 
-      // Update state with the fetched data
+      // Update State With Fetched Data
       setState(data);
 
-      // Toggle the visibility of the current category
+      // Toggle Visibility of Current Activity
       setShow(prevShow => !prevShow);
 
-      // Scroll to the appropriate position
+      // Auto Scroll Options to Middle of Screen
       if (scrollViewRef.current) {
-        let yOffset = windowHeight * 0.5; // Half of the screen height
+
+        let yOffset = windowHeight * 0.5;
         scrollViewRef.current.scrollTo({ y: yOffset, animated: true });
+
       }
+
     } catch (error) {
+
       console.error(`Error fetching ${endpoint}:`, error);
-      // In case of an error, ensure all sections are hidden
+      // In Case of Error, All Sections Remain Hidden
       hideOthers.forEach(hide => hide());
       setShow(false);
+
     }
+
   };
 
-  // Function to handle item selection for booking
+  // Function to Handle Activity Selection for Booking
   const selectItem = (item: any, category: string) => {
+
     switch (category) {
+
       case 'pubs':
         setSelectedPubs([item]);
         break;
@@ -146,10 +168,12 @@ export default function TabOneScreen() {
         break;
       default:
         break;
+
     }
+
   };
 
-  // Define hide functions for each category
+  // Define Hide Hunctions for Each Activity
   const hidePubs = () => {
     setShowPubs(false);
     setPubs([]);
@@ -170,19 +194,26 @@ export default function TabOneScreen() {
     setActivities([]);
   };
 
-  // Function to handle the carousel item press
+  // Item Carousel Function
   const handleCarouselItemPress = (item: any) => {
-    // Logic to handle carousel item press
+   
   };
 
   return (
+
+    // Activities Stylesheet
     <View style={styles.container}>
+
       <ScrollView
+      
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
       >
+        {/* Page Title and Geo-Location */}
         <Text style={styles.title}>WHERE GO?</Text>
         <Text style={styles.geo}> Welcome to {city}</Text>
+
+        {/* Pub Select Button */}  
         <TouchableOpacity
           style={[styles.carouselItem, showPubs && styles.selectedItem]}
           onPress={() => fetchData('pubs', setPubs, setShowPubs, [hideRestaurants, hideMovies, hideActivities])}
@@ -190,29 +221,38 @@ export default function TabOneScreen() {
           <Text style={styles.text}>PUBS</Text>
         </TouchableOpacity>
 
+        {/* Pub Options Carousel */}
         {showPubs && (
+
           <Carousel
             data={pubs}
             renderItem={({ item }) => (
+
+              // Pub Option Details and Booking
               <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+
                 <Image source={{ uri: item.image_url || '' }} style={styles.pubImage} />
                 <Text style={styles.pubName}>{item.name}</Text>
                 <Text>{item.location}</Text>
                 <Text>Rating: {item.rating}</Text>
+
                 <TouchableOpacity onPress={() => selectItem(item, 'pubs')}>
                   <Text style={styles.bookButton}>Book</Text>
                 </TouchableOpacity>
+
               </TouchableOpacity>
+
             )}
-            sliderWidth={windowWidth} // Set sliderWidth to windowWidth
+
+            sliderWidth={windowWidth}
             itemWidth={200}
             layout="default"
             loop={true}
           />
+
         )}
 
-        {/* Add similar sections for restaurants, movies, and activities */}
-
+        {/* Restaurant Select Button */}
         <TouchableOpacity
           style={[styles.carouselItem, showRestaurants && styles.selectedItem]}
           onPress={() => fetchData('restaurants', setRestaurants, setShowRestaurants, [hidePubs, hideMovies, hideActivities])}
@@ -220,29 +260,38 @@ export default function TabOneScreen() {
           <Text style={styles.text}>RESTAURANTS</Text>
         </TouchableOpacity>
 
+        {/* Restaurant Options Carousel */}  
         {showRestaurants && (
+
           <Carousel
             data={restaurants}
             renderItem={({ item }) => (
+
+              // Restaurant Option Details and Booking
               <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+
                 <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
                 <Text style={styles.pubName}>{item.name}</Text>
                 <Text>{item.cuisine} - {item.address}</Text>
                 <Text>Rating: {item.rating}</Text>
+
                 <TouchableOpacity onPress={() => selectItem(item, 'restaurants')}>
                   <Text style={styles.bookButton}>Book</Text>
                 </TouchableOpacity>
+
               </TouchableOpacity>
+
             )}
-            sliderWidth={windowWidth} // Set sliderWidth to windowWidth
+
+            sliderWidth={windowWidth}
             itemWidth={200}
             layout="default"
             loop={true}
           />
+
         )}
 
-        {/* Add similar sections for movies and activities */}
-
+        {/*Movie Select Button */}
         <TouchableOpacity
           style={[styles.carouselItem, showMovies && styles.selectedItem]}
           onPress={() => fetchData('movies', setMovies, setShowMovies, [hidePubs, hideRestaurants, hideActivities])}
@@ -250,27 +299,38 @@ export default function TabOneScreen() {
           <Text style={styles.text}>MOVIES</Text>
         </TouchableOpacity>
 
+        {/* Movies Options Carousel */}
         {showMovies && (
+
           <Carousel
             data={movies}
             renderItem={({ item }) => (
+
+              // Movies Option Details and Booking
               <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+
                 <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
                 <Text style={styles.pubName}>{item.movie}</Text>
                 <Text>{item.genre} - {item.time}</Text>
                 <Text>{item.cinema}</Text>
+
                 <TouchableOpacity onPress={() => selectItem(item, 'movies')}>
                   <Text style={styles.bookButton}>Book</Text>
                 </TouchableOpacity>
+
               </TouchableOpacity>
+
             )}
-            sliderWidth={windowWidth} // Set sliderWidth to windowWidth
+
+            sliderWidth={windowWidth} 
             itemWidth={200}
             layout="default"
             loop={true}
           />
+
         )}
 
+        {/* Activities Select Button */}
         <TouchableOpacity
           style={[styles.carouselItem, showActivities && styles.selectedItem]}
           onPress={() => fetchData('activities', setActivities, setShowActivities, [hidePubs, hideMovies, hideRestaurants])}
@@ -278,52 +338,76 @@ export default function TabOneScreen() {
           <Text style={styles.text}>ACTIVITIES</Text>
         </TouchableOpacity>
 
+        {/* Activities Options Carousel */}
         {showActivities && (
+
           <Carousel
             data={activities}
             renderItem={({ item }) => (
+
+              // Activities Option Details and Booking
               <TouchableOpacity onPress={() => handleCarouselItemPress(item)}>
+
                 <Image source={{ uri: item.image || '' }} style={styles.pubImage} />
                 <Text style={styles.pubName}>{item.activity}</Text>
                 <Text>{item.type} - {item.location}</Text>
                 <Text>{item.description}</Text>
+
                 <TouchableOpacity onPress={() => selectItem(item, 'activities')}>
                   <Text style={styles.bookButton}>Book</Text>
                 </TouchableOpacity>
+
               </TouchableOpacity>
+
             )}
-            sliderWidth={windowWidth} // Set sliderWidth to windowWidth
+
+            sliderWidth={windowWidth}
             itemWidth={200}
             layout="default"
             loop={true}
           />
+
         )}
 
-        {/* Add a button to navigate to the Booking Screen with all selected items */}
+        {/* Review Bookins Button Functionality */}
         <TouchableOpacity
+
           style={styles.carouselItem}
           onPress={() => {
+
             console.log("Selected Pubs:", selectedPubs);
             console.log("Selected Restaurants:", selectedRestaurants);
             console.log("Selected Movies:", selectedMovies);
             console.log("Selected Activities:", selectedActivities);
+
             navigation.navigate('bookings', {
+
               selectedPubs, selectedMovies, selectedRestaurants, selectedActivities
+
             });
+
           }}
         >
           <Text style={styles.text}>Review Booking</Text>
+
         </TouchableOpacity>
+
       </ScrollView>
+
     </View>
+
   );
+
 }
 
+// Overall Page Stylesheet
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#fde992',
   },
+
   carouselItem: {
     width: '100%',
     alignItems: 'center',
@@ -333,9 +417,11 @@ const styles = StyleSheet.create({
     height: 100,
     marginVertical: 10,
   },
+
   selectedItem: {
-    transform: [{ scale: 1.2 }], // Enlarge the selected item
+    transform: [{ scale: 1.2 }],
   },
+
   text: {
     color: 'white',
     fontSize: 20,
@@ -348,27 +434,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
   },
+
   pubContainer: {
     backgroundColor: 'white',
     padding: 10,
     marginVertical: 5,
-    width: '100%',  // Ensure full width is taken
-    alignItems: 'center',  // Center items horizontally
+    width: '100%',  
+    alignItems: 'center',  
   },
+
   pubName: {
     fontSize: 24,
     fontWeight: 'bold',
   },
+
   pubInfo: {
     fontSize: 18,
   },
+
   pubImage: {
-    width: '100%',  // Full width of the container
-    height: 200,     // Fixed height for the images
-    marginVertical: 10, // Space above and below the image
+    width: '100%',  
+    height: 200,  
+    marginVertical: 10,
   },
+
   bookButton: {
-    backgroundColor: '#4CAF50', // A nice green color
+    backgroundColor: '#4CAF50', 
     color: 'white',
     padding: 10,
     borderRadius: 5,
@@ -376,6 +467,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 100,
   },
+
   geo: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -383,4 +475,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
+
 });

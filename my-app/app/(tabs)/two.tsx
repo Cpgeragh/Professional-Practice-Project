@@ -3,7 +3,10 @@ import { StyleSheet, TextInput, Button, ActivityIndicator, View, Text } from 're
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import * as Font from 'expo-font';
 
+// Login Page Function
 export default function TabTwoScreen() {
+
+  // Declare Variables
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameFocused, setUsernameFocused] = useState(false);
@@ -11,57 +14,98 @@ export default function TabTwoScreen() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
+  // Set Custom Fonts
   useEffect(() => {
+
     async function loadFonts() {
+
       await Font.loadAsync({
+
         'Bauhaus Regular': require('../../assets/fonts/Bonfire.ttf'),
+
       }).then(() => {
+
         setFontsLoaded(true);
+
       }).catch(e => {
+
         console.error("Error loading fonts", e);
+
       });
+
     }
 
     loadFonts();
+
   }, []);
 
+  // Login Function
   const handleLogin = async () => {
+
+    // Send Login Details to Server
     try {
-      const response = await fetch('http://192.168.1.11:5000/login', {
+
+      const response = await fetch('http://10.12.8.87:5000/login', {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+
         },
+
         body: JSON.stringify({
+
           username,
           password,
+
         }),
+
       });
 
+      // If Login Details Correct, Open Activities Page
       const data = await response.json();
       console.log(data);
 
       if (data.success) {
-        navigation.navigate('three'); // Assuming 'three' is your home screen after login
-      } else {
+
+        navigation.navigate('three');
+
+      } 
+      
+      else {
+
         console.log('Login failed:', data.message);
+
       }
+
     } catch (error) {
+
       console.error('Error:', error);
+
     }
+
   };
 
+  // Navigate To Sign Up Page
   const navigateToSignup = () => {
+
     navigation.navigate('SignUpScreen');
+
   };
 
   if (!fontsLoaded) {
+
     return <ActivityIndicator size="large" />;
+
   }
 
+  // Data Input Stylesheet
   return (
+
     <View style={styles.container}>
+
       <Text style={[styles.title, { fontFamily: 'Bauhaus Regular' }]}>WHO YOU?</Text>
+
       <TextInput
         style={[styles.input, usernameFocused && styles.inputFocused]}
         placeholder="Username"
@@ -70,6 +114,7 @@ export default function TabTwoScreen() {
         onFocus={() => setUsernameFocused(true)}
         onBlur={() => setUsernameFocused(false)}
       />
+
       <TextInput
         style={[styles.input, passwordFocused && styles.inputFocused]}
         placeholder="Password"
@@ -79,16 +124,26 @@ export default function TabTwoScreen() {
         onFocus={() => setPasswordFocused(true)}
         onBlur={() => setPasswordFocused(false)}
       />
+
       <View style={{ marginTop: 10, width: '90%' }}>
+
         <Button title="Login" onPress={handleLogin} color="#ff2c2c" />
+
       </View>
+
       <View style={{ marginTop: 10, width: '90%' }}>
+
         <Button title="Sign Up" onPress={navigateToSignup} color="#ff2c2c" />
+
       </View>
+
     </View>
+
   );
+
 }
 
+// Overaal Page Stylesheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -113,8 +168,8 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ff2c2c', // Red border color
-    color: '#ff2c2c', // Text color
+    borderColor: '#ff2c2c', 
+    color: '#ff2c2c',
   },
   inputFocused: {
     color: '#fff',

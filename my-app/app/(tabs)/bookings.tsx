@@ -134,7 +134,7 @@ export default function BookingsScreen() {
         // Attempts to Contact Mongo Databse and Send Data to it
         try {
 
-            const response = await fetch('http://192.168.1.11:5000/bookings', {
+            const response = await fetch('http://10.12.8.87:5000/bookings', {
 
                 method: 'POST',
                 headers: {
