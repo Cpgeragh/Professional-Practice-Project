@@ -60,7 +60,7 @@ export default function TabOneScreen() {
       hideOthers.forEach(hide => hide());
 
       // Construct the full URL for the API call
-      const url = `http://192.168.0.32:5000/${endpoint}`;
+      const url = `http://localhost:5000/${endpoint}`;
 
       // Fetch data from the server
       const response = await fetch(url);

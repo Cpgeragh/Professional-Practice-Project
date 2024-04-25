@@ -44,7 +44,7 @@ export default function BookingsScreen() {
         };
 
         try {
-            const response = await fetch('http://192.168.0.32:5000/bookings', {
+            const response = await fetch('http://localhost:5000/bookings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -187,5 +187,3 @@ const styles = StyleSheet.create({
         width: 150,
     },
 });
-
-

@@ -11,7 +11,7 @@ const SignupScreen = () => {
   const navigation = useNavigation();  // Use the navigation hook to get access to navigation prop
 
   const handleSignup = async () => {
-    const signupUrl = 'http://192.168.0.32:5000/signup';
+    const signupUrl = 'http://localhost:5000/signup';
     try {
       const response = await fetch(signupUrl, {
         method: 'POST',
